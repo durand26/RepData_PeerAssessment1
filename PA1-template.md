@@ -32,6 +32,7 @@ analysis
 ## Q1. What is the mean number of total steps taken per day?
 
 > Make a histogram of the total number of steps taken each day
+> Calculate and report the mean and median total number of steps taken per day
 
 
 ```r
@@ -44,31 +45,10 @@ analysis
 
 
 ```r
-# Plot this data as a histogram
-    q1Plot <- ggplot(q1Data, aes(x=q1Data$sumSteps)) 
-
-    q1Plot + 
-        geom_histogram(binwidth = 2000, color = "darkgreen", fill="white") +
-        xlab("Daily Steps") + 
-        ylab("Frequency (Days that step-count occurred)") +
-        labs(title ="Histogram - Steps taken per day") 
-```
-
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
-
-> Calculate and report the mean and median total number of steps taken per day
-
-
-```r
 # Calculate the mean and median
-
     q1Mean <- mean(q1Data$sumSteps, na.rm=TRUE)
     q1Median <- round(as.numeric(median(q1Data$sumSteps, na.rm=TRUE)), 0)
 ```
-
-The average number of steps taken per day is 10766.  
-The median number of steps taken per day is 10765.  
-To put that graphically, it looks like this:
 
 
 ```r
@@ -87,7 +67,10 @@ To put that graphically, it looks like this:
                  , color = "#0000FF", size = 4)
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+
+The average number of steps taken per day is 10766.  
+The median number of steps taken per day is 10765.  
 
 ## 2. What is the average daily activity pattern?
 >  Make a time series plot (i.e. type = "l") of the 5-minute interval  
@@ -116,36 +99,11 @@ To put that graphically, it looks like this:
     q2Data <- cbind(timeInterval, q2Data)
     rm(intHours, intMinutes, startTime, timeInterval)
 
-    #Create the plot    
-    q2Plot <- ggplot(q2Data
-                     , aes(x = timeInterval, y = avgSteps)
-                      ) 
-    q2Plot + 
-        geom_line() + 
-        scale_x_datetime(labels = date_format("%H:%M"),breaks = "3 hour") +
-        xlab("Time of Day") +
-        ylab("Average Steps") + 
-        labs(title = "Average Daily Activity Pattern")
-```
-
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
-
-> Which 5-minute interval, on average across all the days in the dataset,
-   contains the maximum number of steps?
-
-
-```r
     # Add a column that allows us to chart the busiest five minute interval 
     busiestInterval <- q2Data %>%
         select(timeInterval, avgSteps) %>%
         filter(avgSteps == max(avgSteps))
-```
 
-The 5-minute interval with the maximum number of steps is 08:35,  
-as can be seen in this chart:
-
-
-```r
     # Update the data set
    busiestColumn <- replace(q2Data$avgSteps, q2Data$avgSteps != busiestInterval$avgSteps, NA)
     q2Data <- cbind(q2Data, busiestColumn)
@@ -179,9 +137,12 @@ as can be seen in this chart:
 ## Warning: Removed 287 rows containing missing values (position_stack).
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
-## 3) IMPUTING MISSING VALUES
+The 5-minute interval with the maximum number of steps is 08:35
+
+
+## 3) Imputing missing values
 > Calculate and report the total number of missing values in the dataset
 >   (i.e. the total number of rows with NAs)
 
@@ -270,7 +231,7 @@ Here is the histogram of steps taken each day, with the missing values filled in
                  , color = "#0000FF", size = 4)
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png) 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
 
 > Calculate and report the mean and median total number of steps taken per
    day. Do these values differ from the estimates from the first part of the 
@@ -319,7 +280,7 @@ The values would have differed, making the histogram look like this:
                  , color = "#0000FF", size = 4)
 ```
 
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
 
 ## 4. Are there differences in activity patterns between weekdays and weekends?
 > Create a new factor variable in the dataset with two levels – “weekday” 
@@ -396,5 +357,5 @@ The values would have differed, making the histogram look like this:
         facet_grid(weekDay ~ .) 
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png) 
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png) 
 
